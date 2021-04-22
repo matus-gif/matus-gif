@@ -1,0 +1,543 @@
+debounce = false
+Clock = {}
+local Sky = Instance.new("Sky",game.Lighting)
+Sky.CelestialBodiesShown = false
+Sky.SkyboxBk = "http://www.roblox.com/asset/?id=159454299"
+Sky.SkyboxDn = "http://www.roblox.com/asset/?id=159454296"
+Sky.SkyboxFt = "http://www.roblox.com/asset/?id=159454293"
+Sky.SkyboxLf = "http://www.roblox.com/asset/?id=159454286"
+Sky.SkyboxRt = "http://www.roblox.com/asset/?id=159454300"
+Sky.SkyboxUp = "http://www.roblox.com/asset/?id=159454288"
+function thrust()
+	for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+		if v:IsA("BasePart") then
+			v.Velocity = Vector3.new(0,0,0)
+			v.RotVelocity = Vector3.new(0,0,0)
+		end
+		for _,q in pairs(v:GetChildren()) do
+			if q:IsA("BasePart") then
+				q.Velocity = Vector3.new(0,0,0)
+				q.RotVelocity = Vector3.new(0,0,0)
+			end
+		end
+	end
+end
+Position = nil
+Origin = nil
+fly = ""
+Die = false
+game.Players.LocalPlayer:GetMouse().KeyDown:connect(function(key)
+	if Die == false then
+		if key == "g" then --Power Stone
+			if debounce == false then
+				if game.Players.LocalPlayer:GetMouse().Target.Anchored == false then
+					debounce = true
+					local Model = Instance.new("Model",workspace)
+					Model.Name = ""
+					for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+						if v:IsA("BasePart") or v:IsA("Accessory") or v:IsA("Humanoid") or v:IsA("CharacterMesh") or v:IsA("Pants") or v:IsA("Shirt") then
+							local Clone = v:Clone()
+							Clone.Parent = Model
+							if Clone:IsA("BasePart") then
+								Clone.Anchored = true
+								Clone:BreakJoints()
+							end
+							for _,r in pairs(Clone:GetChildren()) do
+								if r:IsA("BasePart") then
+									r.Anchored = true
+									r:BreakJoints()
+								end
+							end
+						end
+					end
+					if Model:FindFirstChild("Right Arm") ~= nil then
+						Model["Right Arm"].CFrame = CFrame.new(Model["Right Arm"].Position + Model.Head.CFrame.upVector * 0.5 + Model.Head.CFrame.lookVector * 0.5,game.Players.LocalPlayer:GetMouse().Target.Position)*CFrame.fromOrientation(math.rad(90),math.rad(0),math.rad(0))
+					end
+					local Sound = Instance.new("Sound",workspace)
+					game.Debris:AddItem(Sound,2)
+					Sound.Playing = true
+					Sound.SoundId = "rbxassetid://1146693387"
+					Sound.Volume = 10
+					local Beam = Instance.new("Part",workspace)
+					Beam.Anchored = true
+					Beam.CanCollide = false
+					Beam.BrickColor = BrickColor.new("Royal purple")
+					Beam.Material = "Neon"
+					game.Workspace.Camera.CameraSubject = Model:FindFirstChild("Head")
+					Position = game.Players.LocalPlayer:GetMouse().Target.Position
+					local Velo = Instance.new("BodyVelocity",game.Players.LocalPlayer.Character.Head)
+					Origin = game.Players.LocalPlayer.Character.PrimaryPart.CFrame
+					Velo.MaxForce = Vector3.new(9e9,9e9,9e9)
+					Velo.Velocity = Vector3.new(0,100000,100000)
+					local kaboom = Instance.new("Explosion",workspace)
+					kaboom.BlastPressure = 0
+					kaboom.BlastRadius = 0
+					kaboom.DestroyJointRadiusPercent = 0
+					kaboom.Position = game.Players.LocalPlayer:GetMouse().Target.Position
+					if Model:FindFirstChild("Right Arm") ~= nil then
+						local Pos = (Model["Right Arm"].Position - game.Players.LocalPlayer:GetMouse().Target.Position).magnitude
+						Beam.CFrame = CFrame.new(Model["Right Arm"].Position - Model["Right Arm"].CFrame.upVector * Pos/2,game.Players.LocalPlayer:GetMouse().Target.Position)
+						Beam.Size = Vector3.new(1,1,Pos)
+						game.Debris:AddItem(Beam,0.2)
+					end
+					debounce = false
+					wait(0.3)
+					Velo:Destroy()
+					Position = nil
+					Model:Destroy()
+					game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character
+					for i=1,50 do
+						thrust()
+						game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(Origin)
+						wait()
+					end
+				end
+			end
+		elseif key == "y" then --Space Stone
+			if debounce == false then
+				debounce = true
+				local Model = Instance.new("Model",workspace)
+				Model.Name = ""
+				for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+					if v:IsA("BasePart") or v:IsA("Accessory") or v:IsA("Humanoid") or v:IsA("CharacterMesh") or v:IsA("Pants") or v:IsA("Shirt") then
+						local Clone = v:Clone()
+						Clone.Parent = Model
+						if Clone:IsA("BasePart") then
+							Clone.Anchored = true
+							Clone:BreakJoints()
+						end
+						for _,r in pairs(Clone:GetChildren()) do
+							if r:IsA("BasePart") then
+								r.Anchored = true
+								r:BreakJoints()
+							end
+						end
+					end
+				end	
+				game.Workspace.Camera.CameraSubject = Model:FindFirstChild("Head")
+				game.Players.LocalPlayer.Character:MoveTo(game.Players.LocalPlayer:GetMouse().hit.p)
+				for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+					if v:IsA("BasePart") then
+						v.Transparency = 1
+					end
+				end
+				local n = 0
+				local am = 15
+				for _,v in pairs(Model:GetChildren()) do
+					if v:IsA("BasePart") then
+						v.Anchored = false
+						local Position = Instance.new("BodyPosition",v)
+						Position.MaxForce = Vector3.new(9e9,9e9,9e9)
+						Position.P = 20000
+						Position.Position = game.Players.LocalPlayer.Character.Head.Position
+					end
+				end
+				for i=1,am do
+					n = (n + 1/am)
+					for _,v in pairs(Model:GetChildren()) do
+						if v:IsA("BasePart") then
+							v.Transparency = n
+						end
+					end
+					wait()
+				end
+				wait(0.5)
+				Model:Destroy()
+				game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character
+				local n = 1
+				local am = 15
+				for i=1,am do
+					n = (n - 1/am)
+					for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+						if v:IsA("BasePart") then
+							if v.Name ~= "HumanoidRootPart" then
+								v.Transparency = n
+							end
+						end
+					end
+					wait()
+				end
+				debounce = false
+			end	
+		elseif key == "h" then --Realm Stone
+			if debounce == false then
+				local Mouse = game.Players.LocalPlayer:GetMouse()
+				if Mouse.Target then
+					if Mouse.Target.Parent:FindFirstChild("Humanoid") ~= nil then
+						if game.Players:FindFirstChild(Mouse.Target.Parent.Name) then
+							debounce = true
+							local Target = Mouse.Target.Parent
+							local Char = game.Players.LocalPlayer.Character
+							local n = 0
+							local r = 0
+							for i=1,150 do
+								Char:SetPrimaryPartCFrame(CFrame.new(Target.PrimaryPart.Position) * CFrame.fromOrientation(math.rad(0),math.rad(n),math.rad(0)))
+								Char:SetPrimaryPartCFrame(CFrame.new(Char.PrimaryPart.Position + Char.PrimaryPart.CFrame.lookVector * (20-r),Target.PrimaryPart.Position))
+								n = n + 61
+								r = r+(15/130)
+								wait()
+							end
+							Char:SetPrimaryPartCFrame(CFrame.new(Target.PrimaryPart.Position) * CFrame.fromOrientation(math.rad(0),math.rad(n),math.rad(0)))
+							Char:SetPrimaryPartCFrame(CFrame.new(Char.PrimaryPart.Position + Char.PrimaryPart.CFrame.lookVector * (20),Target.PrimaryPart.Position))
+ 
+						end
+					end
+				end
+				wait(0.1)
+				debounce = false
+			end
+ 
+		elseif key == "n" then --Time Stone
+			if #Clock >= 6 then
+				if debounce == false then
+					debounce = true
+					local Color = Instance.new("ColorCorrectionEffect",game.Workspace.Camera)
+					local g = 255
+					local Model = Instance.new("Model",workspace)
+					Model.Name = ""
+					local Sound = Instance.new("Sound",workspace)
+					game.Debris:AddItem(Sound,10)
+					Sound.Playing = true
+					Sound.SoundId = "rbxassetid://1060064916"
+					Sound.Volume = 10
+					for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+						if v:IsA("BasePart") or v:IsA("Accessory") or v:IsA("Humanoid") or v:IsA("CharacterMesh") or v:IsA("Pants") or v:IsA("Shirt") then
+							local Clone = v:Clone()
+							Clone.Parent = Model
+							if Clone:IsA("BasePart") then
+								Clone.Anchored = true
+								Clone:BreakJoints()
+							end
+							for _,r in pairs(Clone:GetChildren()) do
+								if r:IsA("BasePart") then
+									r.Anchored = true
+									r:BreakJoints()
+								end
+							end
+						end
+					end	
+					game.Workspace.Camera.CameraSubject = Model:FindFirstChild("Head")
+					if #Clock >= 1 then
+						thrust()
+						local PositionX = Clock[#Clock-5]
+						local PositionY = Clock[#Clock-4]
+						local PositionZ = Clock[#Clock-3]
+						local OriX = Clock[#Clock-2]
+						local OriY = Clock[#Clock-1]
+						local OriZ = Clock[#Clock]
+						game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Vector3.new(PositionX,PositionY,PositionZ)) * CFrame.fromOrientation(math.rad(OriX),math.rad(OriY),math.rad(OriZ)))
+						for c=1,6 do
+							table.remove(Clock,#Clock)
+						end
+					end
+					for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+						if v:IsA("BasePart") then
+							v.Transparency = 1
+						end
+					end
+					local n = 0
+					local am = 15
+					for _,v in pairs(Model:GetChildren()) do
+						if v:IsA("BasePart") then
+							v.Anchored = false
+							local Position = Instance.new("BodyPosition",v)
+							Position.MaxForce = Vector3.new(9e9,9e9,9e9)
+							Position.P = 20000
+							Position.Position = game.Players.LocalPlayer.Character.Head.Position
+						end
+					end
+					for i=1,am do
+						n = (n + 1/am)
+						g = g-(255/am)
+						for _,v in pairs(Model:GetChildren()) do
+							if v:IsA("BasePart") then
+								v.Transparency = n
+								Color.TintColor = Color3.fromRGB(g,255,g)
+							end
+						end
+						wait()
+					end
+					wait(0.5)
+					Model:Destroy()
+					game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character
+					local n = 1
+					local am = 15
+					g = 0
+					for i=1,am do
+						n = (n - 1/am)
+						g = g+(255/am)
+						for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+							if v:IsA("BasePart") then
+								if v.Name ~= "HumanoidRootPart" then
+									v.Transparency = n
+									Color.TintColor = Color3.fromRGB(g,255,g)
+								end
+							end
+						end
+						wait()
+					end
+					wait(3)
+					Color:Destroy()
+					debounce = false
+				end
+			end
+		elseif key == "b" then --Power Stone
+			game.Players.LocalPlayer.Character.Humanoid.Jump = true
+			wait(0.1)
+			if debounce == false then
+				debounce = true
+				if fly == "" then
+					fly = "Jump"
+					wait(0.5)
+					fly = "Float"
+				elseif fly == "Float" then
+					fly = ""
+				end
+				wait(1)
+				debounce = false
+			end
+		elseif key == "m" then --Mind + Realm Stone
+			if debounce == false then
+				debounce = true
+				local Model = Instance.new("Model",workspace)
+				Model.Name = ""
+				for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+					if v:IsA("BasePart") or v:IsA("Accessory") or v:IsA("Humanoid") or v:IsA("CharacterMesh") or v:IsA("Pants") or v:IsA("Shirt") then
+						local Clone = v:Clone()
+						Clone.Parent = Model
+						if Clone:IsA("BasePart") then
+							Clone.Anchored = true
+							Clone:BreakJoints()
+						end
+						for _,r in pairs(Clone:GetChildren()) do
+							if r:IsA("BasePart") then
+								r.Anchored = true
+								r:BreakJoints()
+							end
+						end
+					end
+				end	
+				local Part = Instance.new("Part",workspace)
+				Part.Anchored = true
+				Part.CanCollide = false
+				Part.Name = ""
+				Part.Size = Vector3.new(0,0,0)
+				Part.Shape = Enum.PartType.Ball
+				Part.Material = "Neon"
+				Part.BrickColor = BrickColor.new("Neon orange")
+				Part.CFrame = game.Players.LocalPlayer.Character.PrimaryPart.CFrame + Vector3.new(0,-2,0)
+				local Light = Instance.new("PointLight",Part)
+				Light.Brightness = 1
+				Light.Color = Part.Color
+				Light.Range = 20
+				Part.Transparency = 0.7
+				game.Workspace.Camera.CameraSubject = Model:FindFirstChild("Head")
+				local Origin2 = game.Players.LocalPlayer.Character.PrimaryPart.CFrame
+				game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(0,900000,200000))
+				wait(0.05)
+				thrust()
+				game.Players.LocalPlayer.Character.Head.Anchored = true
+				for i=1,11 do
+					Part.Size = Vector3.new(i,i,i)
+					wait(0.01)
+				end
+				wait(7)
+				Model:Destroy()
+				Part:Destroy()
+				game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(Origin2)
+				game.Players.LocalPlayer.Character.Head.Anchored = false
+				game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character
+				debounce = false
+			end
+ 
+		elseif key == "u" then --Mind Stone
+			if debounce == false then
+				if game.Players.LocalPlayer:GetMouse().Target.Parent then
+					if game.Players.LocalPlayer:GetMouse().Target.Parent:FindFirstChild("Humanoid") ~= nil then
+						debounce = true
+						local Target = game.Players.LocalPlayer:GetMouse().Target.Parent
+						local Posit = game.Players.LocalPlayer.Character.PrimaryPart.CFrame
+						game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(900000000,900000000,900000000))
+						game.Workspace.Camera.CameraSubject = Target
+						wait(0.05)
+						game.Players.LocalPlayer.Character.Head.Anchored = true
+						wait(20)
+						game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(Posit)
+						game.Players.LocalPlayer.Character.Head.Anchored = false
+						game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character
+						debounce = false
+					end
+				end
+			end
+ 
+		elseif key == "j" then --Soul Stone
+			if debounce == false then
+				debounce = true
+				wait(1)
+				debounce = false
+			end
+		elseif key == "k" then --All Stones
+			if debounce == false then
+				debounce = true
+				if game.Players.LocalPlayer:GetMouse().Target.Anchored == false then
+					debounce = true
+					local Model = Instance.new("Model",workspace)
+					Model.Name = ""
+					for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+						if v:IsA("BasePart") or v:IsA("Accessory") or v:IsA("Humanoid") or v:IsA("CharacterMesh") or v:IsA("Pants") or v:IsA("Shirt") then
+							local Clone = v:Clone()
+							Clone.Parent = Model
+							if Clone:IsA("BasePart") then
+								Clone.Anchored = true
+								Clone:BreakJoints()
+							end
+							for _,r in pairs(Clone:GetChildren()) do
+								if r:IsA("BasePart") then
+									r.Anchored = true
+									r:BreakJoints()
+								end
+							end
+						end
+					end
+					if Model:FindFirstChild("Right Arm") ~= nil then
+						Model["Right Arm"].CFrame = CFrame.new(Model["Right Arm"].Position + Model.Head.CFrame.upVector * 0.5 + Model.Head.CFrame.lookVector * 0.5,game.Players.LocalPlayer:GetMouse().Target.Position)*CFrame.fromOrientation(math.rad(90),math.rad(0),math.rad(0))
+					end
+					local Sound = Instance.new("Sound",workspace)
+					game.Debris:AddItem(Sound,2)
+					Sound.Playing = true
+					Sound.SoundId = "rbxassetid://2770705979"
+					Sound.Volume = 10
+					local Beam = Instance.new("Part",workspace)
+					Beam.Anchored = true
+					Beam.Transparency = 1
+					Beam.CanCollide = false
+					Beam.BrickColor = BrickColor.new("Institutional white")
+					Beam.Material = "Neon"
+					game.Workspace.Camera.CameraSubject = Model:FindFirstChild("Head")
+					local Posi = game.Players.LocalPlayer:GetMouse().Target.Position
+					local Velo = Instance.new("BodyVelocity",game.Players.LocalPlayer.Character.Head)
+					Origin = game.Players.LocalPlayer.Character.PrimaryPart.CFrame
+					Velo.MaxForce = Vector3.new(9e9,9e9,9e9)
+					Velo.Velocity = Vector3.new(0,math.huge,math.huge)
+					Beam.Transparency = 0
+					Position = Posi
+					local kaboom = Instance.new("Explosion",workspace)
+					kaboom.BlastPressure = 0
+					kaboom.BlastRadius = 0
+					kaboom.DestroyJointRadiusPercent = 0
+					kaboom.Position = Posi
+					if Model:FindFirstChild("Right Arm") ~= nil then
+						local Pos = (Model["Right Arm"].Position - Posi).magnitude
+						Beam.CFrame = CFrame.new(Model["Right Arm"].Position - Model["Right Arm"].CFrame.upVector * Pos/2,Posi)
+						Beam.Size = Vector3.new(2,2,Pos)
+						game.Debris:AddItem(Beam,0.2)
+					end
+					debounce = false
+					wait(1)
+					Velo:Destroy()
+					Position = nil
+					Model:Destroy()
+					game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character
+					for i=1,50 do
+						thrust()
+						game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(Origin)
+						wait()
+					end
+				end
+				wait(1)
+				debounce = false
+			end
+		end
+	end
+end)
+game["Run Service"].Heartbeat:connect(function(step)
+	if Position ~= nil then
+		local Target = Position
+		game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Target) * CFrame.fromOrientation(math.rad(90),math.rad(90),math.rad(90)))
+		wait(step)
+	end
+	if fly == "Float" then
+		for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+			if v:IsA("BasePart") then
+				v.RotVelocity = Vector3.new(v.RotVelocity.X,0,v.RotVelocity.Z)
+				v.Velocity = Vector3.new(v.Velocity.X,2.1,v.Velocity.Z)
+			end
+			for _,q in pairs(v:GetChildren()) do
+				if q:IsA("BasePart") then
+					q.RotVelocity = Vector3.new(q.RotVelocity.X,0,q.RotVelocity.Z)
+					q.Velocity = Vector3.new(q.Velocity.X,2.1,q.Velocity.Z)
+				end
+			end
+		end
+	elseif fly == "Jump" then
+		for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+			if v:IsA("BasePart") then
+				v.RotVelocity = Vector3.new(0,0,0)
+				v.Velocity = Vector3.new(0,100,0)
+			end
+			for _,q in pairs(v:GetChildren()) do
+				if q:IsA("BasePart") then
+					q.RotVelocity = Vector3.new(0,0,0)
+					q.Velocity = Vector3.new(0,100,0)
+				end
+			end
+		end
+	end
+end)
+function thanos()
+	wait(0.35)
+	for _,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+		if v:IsA("BasePart") then
+			v.BrickColor = BrickColor.new("Royal purple")
+		end
+		if v:IsA("Accessory") then
+			v:Destroy()
+		end
+		if v:IsA("CharacterMesh") then
+			v:Destroy()
+		end
+		if v.Name == "Head" then
+			v.Mesh:Destroy()
+			local Head = Instance.new("SpecialMesh",v)
+			Head.Scale = Vector3.new(1.25,1.25,1.25)
+		end
+	end
+	local Pants = Instance.new("Pants",game.Players.LocalPlayer.Character)
+	Pants.PantsTemplate = "http://www.roblox.com/asset/?id=2585191069"
+end
+thanos()
+game.Players.LocalPlayer.CharacterAdded:connect(function()
+	thanos()
+	Die = false
+end)
+ 
+game.Players.LocalPlayer.Character.Humanoid.Died:connect(function()
+	Die = true
+end)
+ 
+while true do
+	wait(20)
+	repeat wait(1)
+		if game.Players.LocalPlayer.Character.PrimaryPart ~= nil then
+			PrimaryPart = game.Players.LocalPlayer.Character.PrimaryPart
+			table.insert(Clock,PrimaryPart.Position.X)
+			table.insert(Clock,PrimaryPart.Position.Y)
+			table.insert(Clock,PrimaryPart.Position.Z)
+			table.insert(Clock,PrimaryPart.Orientation.X)
+			table.insert(Clock,PrimaryPart.Orientation.Y)
+			table.insert(Clock,PrimaryPart.Orientation.Z)
+			thrust()
+		end
+	until debounce == false
+end
+ 
+--Thanos Exploit
+--Press Y To use Space Stone
+--Press G to use Power Stone
+--Press B to use Power+Space Stone
+--Press M to use Power+Realm Stone
+--Press U to use Mind Stone
+--Press H to use Realm Stone
+--Press N to use Time Stone
+--Press J to use Soul Stone
+--Press K to use All Stones
